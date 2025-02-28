@@ -1,2 +1,3 @@
 [X] Set up python and vscode and git and stuff on my new laptop
 [] Figure out how to do pdf understanding stuff
+[] Think about frontend stuff?
