@@ -1,18 +1,25 @@
-import anthropic
+# import anthropic
 import os
 from dotenv import load_dotenv, dotenv_values 
+import requests
+
 load_dotenv() 
 apikey = os.getenv("apikey")
 
-client = anthropic.Anthropic(
-    # defaults to os.environ.get("ANTHROPIC_API_KEY")
-    api_key=apikey,
-)
-message = client.messages.create(
-    model="claude-3-7-sonnet-20250219",
-    max_tokens=1024,
-    messages=[
-        {"role": "user", "content": "Hello, Claude"}
+url = 'https://api.anthropic.com/v1/messages'
+headers = {
+    'x-api-key': apikey, 
+    'anthropic-version': '2023-06-01', 
+    'content-type' : 'application/json'
+}
+
+payload = {
+    "model" : "claude-3-7-sonnet-20250219",
+    "max_tokens": 1024,
+    "messages": [
+        {"role": "user", "content": "can anthropic read images?"}
     ]
-)
-print(message.content)
+}
+
+r = requests.post(url, json=payload, headers=headers)
+print(r.json())
