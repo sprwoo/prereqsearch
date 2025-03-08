@@ -1,3 +1,12 @@
+to do:
 [X] Set up python and vscode and git and stuff on my new laptop
-[] Figure out how to do pdf understanding stuff
-[] Think about frontend stuff?
+[X] Figure out how to do pdf understanding stuff
+[] Think about stack?
+    - nextjs, (flask, fastapi, django), supabase
+[] Hit purple ranks in tekken
+
+ideas:
+- a database to save papers that have already been analyzed to save time (and money on my end)
+    - With the database, there could be some sort of rating system?
+    - rating system to rate the paper itself (probably not)
+    - rating system to rate the analysis 

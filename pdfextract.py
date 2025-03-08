@@ -2,13 +2,14 @@ import fitz
 import base64
 
 def pdf_to_base64():
-    path = "./attention.pdf"
+    path = "./exmaple.pdf"
 
+    pymupdf_text = ""
     with fitz.open(path) as doc:
-        pymupdf_text = ""
         for page in doc:
             pymupdf_text += page.get_text()
 
+    pdf_images = []
     with fitz.open(path) as doc:
         for page in doc:
             image = page.get_pixmap()
@@ -17,7 +18,9 @@ def pdf_to_base64():
             image_b64 = base64.b64encode(image_data)
             image_b64_string = image_b64.decode('utf-8')
 
-            return image_b64_string
+            pdf_images.append(image_b64_string)
+    
+    return pymupdf_text, pdf_images
             
             # print(image_b64_string)
             # pix.save("page-%i.png" % page.number)
@@ -29,3 +32,5 @@ def pdf_to_base64():
         
     
     # print(pymupdf_text)
+if __name__ == "__main__":
+    pdf_to_base64()

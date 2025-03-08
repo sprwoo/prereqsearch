@@ -14,7 +14,28 @@ headers = {
     'content-type' : 'application/json'
 }
 
-string = pdf_to_base64()
+pdf_text, pdf_images = pdf_to_base64()
+
+content = []
+for image in pdf_images:
+    content.append({
+        "type" : "image",
+        "source" : {
+            "type" : "base64",
+            "media_type" : "image/png",
+            "data" : image,
+        },
+    })
+
+content.append({
+    "type": "text",
+    "text": pdf_text
+})
+
+content.append({
+    "type": "text",
+    "text": "Can you give me ONLY the title of the paper, NOTHING ELSE in the output, ONLY the title. Then, can you provide me with a list of 3 concepts that I should be familiar with before reading this paper to be able to understand. I ONLY want the TITLE or the NAME of said concept. These concepts should also be concepts that HAVE a wikipedia page."
+})
 
 payload = {
     "model" : "claude-3-7-sonnet-20250219",
@@ -22,23 +43,11 @@ payload = {
     "messages": [
         {
             "role": "user", 
-            "content": [
-                {
-                    "type" : "image",
-                    "source" : {
-                        "type" : "base64",
-                        "media_type" : "image/png",
-                        "data" : string,
-                    },
-                },
-                {
-                    "type" : "text",
-                    "text" : "What is the title of this paper?"
-                }
-            ],
-        }
-    ],
+            "content": content
+        },
+    ]
 }
 
 r = requests.post(url, json=payload, headers=headers)
 print(r.json())
+# print(r.json().text)
