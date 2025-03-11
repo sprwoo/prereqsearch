@@ -1,4 +1,3 @@
-# import anthropic
 import os
 from dotenv import load_dotenv, dotenv_values 
 import requests
@@ -27,14 +26,35 @@ for image in pdf_images:
         },
     })
 
-content.append({
-    "type": "text",
-    "text": pdf_text
-})
+# content.append({
+#     "type": "text",
+#     "text": pdf_text
+# })
+
+prompt = """
+    The provided images are the images of a research paper. 
+    Pretend the user is an undergraduate student with limited knowledge in the field of the paper. 
+    I want you to analyze the paper and identify the 3 key prerequisites that the reader should know to help the reader understand the key ideas of the paper. 
+    These prerequisites MUST 
+        - Have a WIKIPEDIA page (or can easily find information about) 
+        - Be RELEVANT to the topic of the paper.
+        - Be methods, algorithms, theorems, or results (NOT ENTIRE FIELDS OR DISCIPLINES OF STUDIES)
+        - Prioritize the prerequisites in the order: methods, algorithms, theorems, results.
+    Here is a specific format I want you to follow:
+    
+    Paper name: <NAME OF THE PAPER>
+    Paper author: <ONLY THE FIRST AUTHOR>
+    Context: <SINGLE SENTENCE ABOUT THE PAPER’S GOAL AND TOPIC>
+    1. <NAME OF PREREQUISITE 1>
+    2. <NAME OF PREREQUISITE 2>
+    3. <NAME OF PREREQUISITE 3>
+
+    Please provide the information in the specified format, do NOT add extra text or explanations. Thank you.
+"""
 
 content.append({
     "type": "text",
-    "text": "Can you give me ONLY the title of the paper, NOTHING ELSE in the output, ONLY the title. Then, can you provide me with a list of 3 concepts that I should be familiar with before reading this paper to be able to understand. I ONLY want the TITLE or the NAME of said concept. These concepts should also be concepts that HAVE a wikipedia page."
+    "text": prompt
 })
 
 payload = {
@@ -50,4 +70,8 @@ payload = {
 
 r = requests.post(url, json=payload, headers=headers)
 print(r.json())
-# print(r.json().text)
+print(r.json()['content'][0]['text'])
+
+
+# TODO use regex to check if the returned format is correct
+# Maybe check if the prerequisites are existing wikipedia sites? I

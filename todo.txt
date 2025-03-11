@@ -1,6 +1,7 @@
 to do:
 [X] Set up python and vscode and git and stuff on my new laptop
 [X] Figure out how to do pdf understanding stuff
+[] Prompt engineer
 [] Think about stack?
     - nextjs, (flask, fastapi, django), supabase
 [] Hit purple ranks in tekken
