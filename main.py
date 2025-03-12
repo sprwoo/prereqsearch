@@ -36,18 +36,25 @@ prompt = """
     Pretend the user is an undergraduate student with limited knowledge in the field of the paper. 
     I want you to analyze the paper and identify the 3 key prerequisites that the reader should know to help the reader understand the key ideas of the paper. 
     These prerequisites MUST 
-        - Have a WIKIPEDIA page (or can easily find information about) 
+        - Have a WIKIPEDIA page (or have an abundance of sources for information). 
         - Be RELEVANT to the topic of the paper.
-        - Be methods, algorithms, theorems, or results (NOT ENTIRE FIELDS OR DISCIPLINES OF STUDIES)
+        - Be methods, algorithms, theorems, or results.
         - Prioritize the prerequisites in the order: methods, algorithms, theorems, results.
+        - These prerequisites should also not be explicitly explained within the paper itself.
     Here is a specific format I want you to follow:
     
     Paper name: <NAME OF THE PAPER>
     Paper author: <ONLY THE FIRST AUTHOR>
-    Context: <SINGLE SENTENCE ABOUT THE PAPER’S GOAL AND TOPIC>
-    1. <NAME OF PREREQUISITE 1>
-    2. <NAME OF PREREQUISITE 2>
-    3. <NAME OF PREREQUISITE 3>
+    Context: <SINGLE SENTENCE ABOUT THE PAPER'S GOAL AND TOPIC>
+    P1. <NAME OF PREREQUISITE 1>
+    P2. <NAME OF PREREQUISITE 2>
+    P3. <NAME OF PREREQUISITE 3>
+    L1. <LINK TO P1'S WIKIPEDIA PAGE>
+    L2. <LINK TO P2'S WIKIPEDIA PAGE>
+    L3. <LINK TO P3'S WIKIPEDIA PAGE>
+    E1. <BRIEF EXPLAINATION WHY P1 WAS CHOSEN>
+    E2. <BRIEF EXPLAINATION WHY P2 WAS CHOSEN>
+    E3. <BRIEF EXPLAINATION WHY P3 WAS CHOSEN>
 
     Please provide the information in the specified format, do NOT add extra text or explanations. Thank you.
 """
