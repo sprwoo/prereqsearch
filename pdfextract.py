@@ -1,16 +1,16 @@
 import fitz 
 import base64
 
-def pdf_to_base64():
-    path = "./exmaple.pdf"
+def pdf_to_base64(paper):
+    # path = "./exmaple.pdf"
 
     pymupdf_text = ""
-    with fitz.open(path) as doc:
+    with fitz.open(paper) as doc:
         for page in doc:
             pymupdf_text += page.get_text()
 
     pdf_images = []
-    with fitz.open(path) as doc:
+    with fitz.open(paper) as doc:
         for page in doc:
             image = page.get_pixmap()
             image_data = image.tobytes("png")
