@@ -7,14 +7,16 @@ import { useState } from "react";
 
 export default function Page() {
     const [isPapersVisible, setIsPapersVisible] = useState(true);
+    const [papersBarWidth, setPapersBarWidth] = useState("w-[15vw]");
+
     const [isChatVisible, setIsChatVisible] = useState(true);
     
     return (
-        <div className="flex h-screen">
-            <PapersBar isPapersVisible={isPapersVisible} setIsPapersVisible={setIsPapersVisible}/>
+        <div className="flex-row h-screen">
+            <PapersBar papersBarWidth={papersBarWidth} setPapersBarWidth={setPapersBarWidth}/>
 
-            <div className="flex-1 bg-gray-500 text-white p-4">
-                <PDFReader />
+            <div className="flex-1">
+                <PDFReader papersBarWidth={papersBarWidth} isChatVisible={isChatVisible} />
             </div>
                 
             <ChatBar isChatVisible={isChatVisible} setIsChatVisible={setIsChatVisible} />
