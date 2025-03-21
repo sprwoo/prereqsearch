@@ -7,9 +7,11 @@ from fastapi import FastAPI
 # Create a FastAPI application
 app = FastAPI()
 
+# Get environment variables
 load_dotenv() 
 apikey = os.getenv("apikey")
 
+# Anthropic API endpoint
 url = 'https://api.anthropic.com/v1/messages'
 headers = {
     'x-api-key': apikey, 
@@ -17,11 +19,22 @@ headers = {
     'content-type' : 'application/json'
 }
 
+# fuck i didnt look for pdf support by anthropic
+# https://docs.anthropic.com/en/docs/build-with-claude/pdf-support
+# It should be noted that this takes both text and images, so it'll be much more expensive
+# I think realistically, its gonna be the same
+
+# I might want to develop this into a bit like a chat bot. look into message caching
+
 @app.get("/")
 def get_prerequisites(paper):
+    # paper is expected to be a pdf file of a research paper, since most, if not, all research papers default download to pdf
+    # the paper is also expected to be downloaded by a normal person that hasnt fucked around with the contents or orientation
     pdf_text, pdf_images = pdf_to_base64(paper)
 
     content = []
+
+    # Add the images of the pdf into 
     for image in pdf_images:
         content.append({
             "type" : "image",
@@ -32,42 +45,31 @@ def get_prerequisites(paper):
             },
         })
 
-    prompt = """
-        The provided images are the images of a research paper. 
+    payload = {
+        "model" : "claude-3-7-sonnet-20250219",
+        "max_tokens": 1024,
+        "system": """
+        You are an expert in the field of the given paper. The provided images are the images of a research paper. 
         Pretend the user is an undergraduate student with limited knowledge in the field of the paper. 
-        I want you to analyze the paper and identify the 3 key prerequisites that the reader should know to help the reader understand the key ideas of the paper. 
-        These prerequisites MUST 
-            - Have a WIKIPEDIA page (or have an abundance of sources for information). 
-            - Be RELEVANT to the topic of the paper.
-            - Be methods, algorithms, theorems, or results.
-            - Prioritize the prerequisites in the order: methods, algorithms, theorems, results.
-            - These prerequisites should also not be explicitly explained within the paper itself.
-        Here is a specific format I want you to follow:
+        Analyze the paper and identify the three most important prerequisites the student should understand to grasp the key ideas of the paper. These prerequisites MUST:
         
+        These prerequisites MUST 
+            - Have a WIKIPEDIA page (or be well-documented). 
+            - Be relevant to the core concepts of the paper.
+            - Prioritize methods, algorithms, theorems, and results in that order.
+            - Not be explicitly explained within the paper itself.
+
+        Follow this format and do NOT add extra text or explanations:
         Paper name: <NAME OF THE PAPER>
         Paper author: <ONLY THE FIRST AUTHOR>
         Context: <SINGLE SENTENCE ABOUT THE PAPER'S GOAL AND TOPIC>
         P1. <NAME OF PREREQUISITE 1>
         P2. <NAME OF PREREQUISITE 2>
         P3. <NAME OF PREREQUISITE 3>
-        L1. <LINK TO P1'S WIKIPEDIA PAGE>
-        L2. <LINK TO P2'S WIKIPEDIA PAGE>
-        L3. <LINK TO P3'S WIKIPEDIA PAGE>
         E1. <BRIEF EXPLAINATION WHY P1 WAS CHOSEN>
         E2. <BRIEF EXPLAINATION WHY P2 WAS CHOSEN>
-        E3. <BRIEF EXPLAINATION WHY P3 WAS CHOSEN>
+        E3. <BRIEF EXPLAINATION WHY P3 WAS CHOSEN>""",
 
-        Please provide the information in the specified format, do NOT add extra text or explanations. Thank you.
-    """
-
-    content.append({
-        "type": "text",
-        "text": prompt
-    })
-
-    payload = {
-        "model" : "claude-3-7-sonnet-20250219",
-        "max_tokens": 1024,
         "messages": [
             {
                 "role": "user", 
