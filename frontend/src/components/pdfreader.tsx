@@ -1,18 +1,18 @@
 interface PDFReaderProps {
     papersBarWidth: string;
-    isChatVisible: boolean;
+    chatBarWidth: string;
 }
 
-export default function PDFReader({ papersBarWidth, isChatVisible }: PDFReaderProps) {
+export default function PDFReader({ papersBarWidth, chatBarWidth }: PDFReaderProps) {
     const marginLeft = papersBarWidth === "w-[15vw]" ? "ml-[15vw]" : "ml-0";
+    const marginRight = chatBarWidth === "w-[15vw]" ? "mr-[15vw]" : "mr-0";
     
     return (
         <div
-            className={`${marginLeft} h-screen bg-gray-400 transition-all duration-300`}
+            className={`${marginLeft} ${marginRight} h-screen bg-gray-400 transition-all duration-300`}
         >
-            <div className="p-8">
+            <div className="p-8 overflow-auto">
                 <h1 className="text-2xl font-bold">Main Content</h1>
-                <p>This area expands and collapses when the sidebar is toggled. This area expands and collapses when the sidebar is toggled. This area expands and collapses when the sidebar is toggled. </p>
             </div>
         </div>
     );

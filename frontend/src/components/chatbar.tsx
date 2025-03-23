@@ -1,17 +1,17 @@
 "use client";
 
-interface ChatBarProps {
-  isChatVisible: boolean;
-  setIsChatVisible: (visible: boolean) => void;
+interface ChatBarProps { 
+  chatBarWidth: string;
+  setChatBarWidth: (visible: string) => void;
 }
 
-export default function ChatBar({ isChatVisible, setIsChatVisible }: ChatBarProps) {
+export default function ChatBar({ chatBarWidth, setChatBarWidth }: ChatBarProps) {
   return (
     <div className="flex-col">
       {/* Sidebar on the Right */}
       <div
-        className={`h-full bg-gray-800 text-white transition-all duration-300 ease-in-out overflow-hidden fixed top-0 right-0 ${isChatVisible ? "w-1/4" : "w-0" // Change width when collapsed
-          }`}
+        className={`h-full bg-gray-800 text-white transition-all duration-300 ease-in-out overflow-hidden fixed top-0 right-0 ${chatBarWidth}
+        `}
       >
         {/* ChatBar Content */}
         <div className="p-4 truncate">
@@ -29,10 +29,10 @@ export default function ChatBar({ isChatVisible, setIsChatVisible }: ChatBarProp
 
       {/* Toggle Button inside the Sidebar */}
       <button
-        onClick={() => setIsChatVisible(!isChatVisible)}
+        onClick={() => setChatBarWidth(chatBarWidth == "w-[15vw]" ? "w-0" : "w-[15vw]")}
         className={`absolute top-4 right-4 bg-blue-500 text-white w-10 h-10 flex items-center justify-center rounded-full z-50`}
       >
-        {isChatVisible ? ">" : "<"}
+        {chatBarWidth == "w-0" ? ">" : "<"}
       </button>
 
     </div>
