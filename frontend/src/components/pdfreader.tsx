@@ -1,11 +1,14 @@
+"use client";
+
+
 interface PDFReaderProps {
-    papersBarWidth: string;
-    chatBarWidth: string;
+    papersBarWidth: number;
+    chatBarWidth: number;
 }
 
 export default function PDFReader({ papersBarWidth, chatBarWidth }: PDFReaderProps) {
-    const marginLeft = papersBarWidth === "w-[15vw]" ? "ml-[15vw]" : "ml-0";
-    const marginRight = chatBarWidth === "w-[15vw]" ? "mr-[15vw]" : "mr-0";
+    const marginLeft = papersBarWidth !== 0 ? `ml-[${papersBarWidth}vw]` : "ml-0";
+    const marginRight = chatBarWidth !== 0 ? `mr-[${chatBarWidth}vw]` : "mr-0";
     
     return (
         <div
@@ -13,6 +16,10 @@ export default function PDFReader({ papersBarWidth, chatBarWidth }: PDFReaderPro
         >
             <div className="p-8 overflow-auto">
                 <h1 className="text-2xl font-bold">Main Content</h1>
+                <form>
+                    <input type="file" id="fileUpload" name="fileUpload"></input>
+                    <input type="submit" value="Upload"></input>
+                </form>
             </div>
         </div>
     );
