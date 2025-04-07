@@ -2,10 +2,19 @@ import os
 from dotenv import load_dotenv, dotenv_values 
 import requests
 from pdfextract import pdf_to_base64 
-from fastapi import FastAPI
- 
+from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+
 # Create a FastAPI application
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Get environment variables
 load_dotenv() 
@@ -27,11 +36,19 @@ headers = {
 # I might want to develop this into a bit like a chat bot. look into message caching
 
 @app.get("/")
-def get_prerequisites(paper):
+async def root():
+    return {"message": "Hello World"}
+
+@app.post("/get_prerequisite")
+async def get_prerequisites(file: UploadFile = File(...)):
     # paper is expected to be a pdf file of a research paper, since most, if not, all research papers default download to pdf
     # the paper is also expected to be downloaded by a normal person that hasnt fucked around with the contents or orientation
-    pdf_text, pdf_images = pdf_to_base64(paper)
-
+    file_content = await file.read()
+    
+    # pdf_text, pdf_images = pdf_to_base64(file_content)
+    
+    return file, 200
+    # return pdf_text 
     content = []
 
     # Add the images of the pdf into 
@@ -44,7 +61,7 @@ def get_prerequisites(paper):
                 "data" : image,
             },
         })
-
+    
     payload = {
         "model" : "claude-3-7-sonnet-20250219",
         "max_tokens": 1024,

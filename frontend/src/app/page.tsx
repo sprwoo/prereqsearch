@@ -1,9 +1,23 @@
-import FileUploadButton from "@/components/fileupload"; // Adjust path if needed
+"use client";
 
-export default function Home() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
-      <FileUploadButton />
-    </div>
-  );
+import PapersBar from "@/components/papersbar";
+import ChatBar from "@/components/chatbar";
+import PDFReader from "@/components/pdfreader";
+import { useState } from "react";
+
+export default function Page() {
+    const [papersBarWidth, setPapersBarWidth] = useState(15);
+    const [chatBarWidth, setChatBarWidth] = useState(30);
+    
+    return (
+        <div className="flex-row h-screen">
+            <PapersBar papersBarWidth={papersBarWidth} setPapersBarWidth={setPapersBarWidth}/>
+
+            <div className="flex-1">
+                <PDFReader papersBarWidth={papersBarWidth} chatBarWidth={chatBarWidth} />
+            </div>
+                
+            <ChatBar chatBarWidth={chatBarWidth} setChatBarWidth={setChatBarWidth} />
+        </div>
+    );
 }
