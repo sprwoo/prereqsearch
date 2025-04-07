@@ -1,51 +1,29 @@
-"use client";
+import React, { useState } from "react";
+import { pdfjs, Document, Page } from "react-pdf";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-pdf/dist/esm/Page/TextLayer.css";
 
-import FileUploadButton from "./fileupload";
-import { useState } from "react";
+// Use the local worker file
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
-interface PDFReaderProps {
-    papersBarWidth: number;
-    chatBarWidth: number;
-}
+const PDFReader: React.FC = () => {
+    const [numPages, setNumPages] = useState<number | null>(null);
 
-export default function PDFReader({ papersBarWidth, chatBarWidth }: PDFReaderProps) {
-    const [uploadedPDF, setUploadedPDF] = useState<File | null>(null);
-    const [pdfURL, setPdfURL] = useState<string | null>(null);
-
-    const handleSetUploadedPDF = (file: File) => {
-        setUploadedPDF(file);
-
-        // Create a URL for the uploaded PDF
-        const fileURL = URL.createObjectURL(file);
-        setPdfURL(fileURL);
+    const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+        setNumPages(numPages);
     };
 
     return (
-        <div
-            style={{
-                marginLeft: `${papersBarWidth}vw`,
-                marginRight: `${chatBarWidth}vw`,
-            }}
-            className="h-screen bg-gray-400 transition-all duration-300"
-        >
-            {/* PDF Upload */}
-            <div className="p-8 overflow-auto">
-                <h1 className="text-2xl font-bold">Main Content</h1>
-                <FileUploadButton setUploadedPDF={handleSetUploadedPDF} />
-            </div>
-
-            {/* Display Uploaded PDF */}
-            {pdfURL && (
-                <div className="p-8">
-                    <h2 className="text-xl font-bold">Uploaded PDF:</h2>
-                    <embed
-                        src={pdfURL}
-                        type="application/pdf"
-                        width="100%"
-                        height="600px"
-                    />
-                </div>
-            )}
+        <div className="h-full overflow-auto p-4 bg-gray-100">
+            <Document file="/exmaple.pdf" onLoadSuccess={onDocumentLoadSuccess}>
+                {Array.from(new Array(numPages || 0), (el, index) => (
+                    <div key={`page_${index + 1}`} className="mb-4">
+                        <Page pageNumber={index + 1} />
+                    </div>
+                ))}
+            </Document>
         </div>
     );
-}
+};
+
+export default PDFReader;

@@ -2,6 +2,7 @@
 
 import PapersBar from "@/components/papersbar";
 import ChatBar from "@/components/chatbar";
+import MainTab from "@/components/maintab";
 import PDFReader from "@/components/pdfreader";
 import { useState } from "react";
 
@@ -14,7 +15,7 @@ export default function Page() {
             <PapersBar papersBarWidth={papersBarWidth} setPapersBarWidth={setPapersBarWidth}/>
 
             <div className="flex-1">
-                <PDFReader papersBarWidth={papersBarWidth} chatBarWidth={chatBarWidth} />
+                <MainTab papersBarWidth={papersBarWidth} chatBarWidth={chatBarWidth} />
             </div>
                 
             <ChatBar chatBarWidth={chatBarWidth} setChatBarWidth={setChatBarWidth} />
