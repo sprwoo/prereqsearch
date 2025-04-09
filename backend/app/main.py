@@ -19,10 +19,10 @@ app.add_middleware(
 
 # Include routers
 app.include_router(mongodb.router, prefix="/db", tags=["db"])
-# app.include_router(prerequisites.router, prefix="/prerequisites", tags=["prerequisites"])
+app.include_router(prerequisites.router, prefix="/prerequisites", tags=["prerequisites"])
 
-print("Routers:", app.routes)
+# print("Routers:", app.routes)
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "API"}
