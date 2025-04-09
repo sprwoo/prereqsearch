@@ -18,6 +18,10 @@ headers = {
     'content-type': 'application/json'
 }
 
+@router.get("/home")
+async def root():
+    return {"message": "This is the prerequistes endpoint"}
+
 @router.post("/get_prerequisite")
 async def get_prerequisites(file: UploadFile = File(...)):
     file_content = await file.read()
