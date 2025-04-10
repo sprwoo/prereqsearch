@@ -14,24 +14,40 @@ export default function MainTab({ papersBarWidth, chatBarWidth }: MainTab) {
     const [pdfURL, setPDFURL] = useState<string | null>(null); 
 
     const handleUploadPDF = async (file: File) => {
+        let author, title;
+
         // Check the first page first
         const formData = new FormData();
         formData.append("file", file);
-        
+
         try {
-            const checkPaper = await fetch("http://localhost:8000/prerequisites/get_metadata", {
+            const paperMetadata = await fetch("http://localhost:8000/prerequisites/get_metadata", {
                 method: "POST",
                 body: formData,
             })
 
-            if (!checkPaper.ok) {
+            if (!paperMetadata.ok) {
                 throw new Error(`HTTP error. `)
             }
             
-            const result = await checkPaper.json();
-            console.log("PDF Uploaded.");
+            const result = await paperMetadata.json();
+            author = result.Author;
+            title = result.Title;
         } catch (error) {
             console.error("Error. ")
+        }
+
+        try {
+            const findPaper = await fetch(`http://localhost:8000/db/check_for_paper/${author}&${title}`);
+            
+            if (!findPaper.ok) {
+                throw new Error(`HTTP error. `);
+            }
+            
+            const result = await findPaper.json();
+            console.log(result);
+        } catch (error) {
+            console.error("Error trying to find the paper in the database. ");
         }
     };
 
