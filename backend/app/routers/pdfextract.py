@@ -1,9 +1,14 @@
 import fitz 
 import base64
 
-def pdf_to_base64(paper):
-    # path = "./exmaple.pdf"
+def extract_first_page(paper):
+    with fitz.open(stream=paper, filetype="pdf") as doc:
+        # Extract text from the first page
+        first_page_text = doc[0].get_text("text")
+        
+    return first_page_text
 
+def pdf_to_base64(paper):
     pymupdf_text = ""
     with fitz.open(paper) as doc:
         for page in doc:
@@ -21,16 +26,6 @@ def pdf_to_base64(paper):
             pdf_images.append(image_b64_string)
     
     return pymupdf_text, pdf_images
-            
-            # print(image_b64_string)
-            # pix.save("page-%i.png" % page.number)
-        # to save this and put this into the ai, i think there are two ways
-        #   - turn it into base64 then send it to claude
-        #   - send the png into a database, get a url link, then send it to claude
 
-        # I think it would be much easier and faster to turn it into base64
-        
-    
-    # print(pymupdf_text)
 if __name__ == "__main__":
     pdf_to_base64()

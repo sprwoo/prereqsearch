@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import mongodb, prerequisites
+from .routers import anthropic, mongodb
 from dotenv import load_dotenv
 import os
 
@@ -19,7 +19,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(mongodb.router, prefix="/db", tags=["db"])
-app.include_router(prerequisites.router, prefix="/prerequisites", tags=["prerequisites"])
+app.include_router(anthropic.router, prefix="/prerequisites", tags=["prerequisites"])
 
 # print("Routers:", app.routes)
 

@@ -13,14 +13,29 @@ export default function MainTab({ papersBarWidth, chatBarWidth }: MainTab) {
     const [uploadedPDF, setUploadedPDF] = useState<File | null>(null);
     const [pdfURL, setPDFURL] = useState<string | null>(null); 
 
-    const handleSetUploadedPDF = (file: File) => {
-        setUploadedPDF(file);
+    const handleSetUploadedPDF = async (file: File) => {
+        // Check the first page first
+        
 
-        // Create a URL for the uploaded PDF
-        // TODO: upload the pdf to the database first, then retrieve it from the database.
-        // Setting up the database should be the next thing i do actually
-        const fileURL = URL.createObjectURL(file);
-        setPDFURL(fileURL);
+        // Send the pdf to the database
+        const formData = new FormData();
+        formData.append("pdf", file);
+
+        try {
+            const response = await fetch("http://127.0.0.1:8000/db/post_pdf", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error. `)
+            }
+
+            const result = await response.json();
+            console.log("PDF Uploaded.");
+        } catch (error) {
+            console.error("Error uploading PDF.");
+        }
     };
 
     return (
@@ -38,12 +53,12 @@ export default function MainTab({ papersBarWidth, chatBarWidth }: MainTab) {
             <FileUploadButton setUploadedPDF={handleSetUploadedPDF} />
 
             {/* Centered PDF Reader */}
-            <div className="flex flex-col items-center justify-center"
+            {/* <div className="flex flex-col items-center justify-center"
                 style={{
                     height: "70%",
                 }}>
-                <PDFReader />
-            </div>
+                <PDFReader pdfId={""} />
+            </div> */}
         </div>
     );
 }

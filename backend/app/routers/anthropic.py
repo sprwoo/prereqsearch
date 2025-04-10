@@ -2,13 +2,13 @@ import os
 from dotenv import load_dotenv
 import requests
 from fastapi import APIRouter, File, UploadFile
-from .pdfextract import pdf_to_base64
+from .pdfextract import extract_first_page, pdf_to_base64
 
 router = APIRouter()
 
 # Get environment variables
 load_dotenv()
-apikey = os.getenv("apikey")
+apikey = os.getenv("ANTHROPIC_KEY")
 
 # Anthropic API endpoint
 url = 'https://api.anthropic.com/v1/messages'
@@ -21,6 +21,37 @@ headers = {
 @router.get("/")
 async def root():
     return {"message": "This is the prerequisites endpoint"}
+
+@router.post("/get_metadata")
+async def get_metadata(file: UploadFile = File(...)):
+    file_content = await file.read()
+    content = extract_first_page(file_content)
+
+    payload = {
+        "model": "claude-3-7-sonnet-20250219",
+        "max_tokens": 1024,
+        "system": """
+            You are an intern at a research papers archive. Your job is to look at first page of a research paper
+            and make a json object with the first author's name, the title of the paper, and the publish date, in the format of MM/YYYY of the paper.
+            Please return it in the format:
+                {
+                    "Author": <author>,
+                    "Title": <title>,
+                    "Date": MM/YYYY,
+                }
+
+        """,
+        "messages" : [
+            {
+                "role": "user",
+                "content": content,
+            },
+        ]
+    }
+    
+    response = requests.post(url, json=payload, headers=headers)
+    # print(response.json())
+    return response.json()
 
 @router.post("/get_prerequisite")
 async def get_prerequisites(file: UploadFile = File(...)):
