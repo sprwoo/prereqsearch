@@ -1,3 +1,4 @@
+import json
 import os
 from dotenv import load_dotenv
 import requests
@@ -50,8 +51,10 @@ async def get_metadata(file: UploadFile = File(...)):
     }
     
     response = requests.post(url, json=payload, headers=headers)
-    # print(response.json())
-    return response.json()
+
+    metadata = response.json().get("content", "No content found")
+    print(metadata)
+    return metadata
 
 @router.post("/get_prerequisite")
 async def get_prerequisites(file: UploadFile = File(...)):
